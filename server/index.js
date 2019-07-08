@@ -2,11 +2,13 @@
 const express = require("express");
 const http = require("http");
 const socketIo = require("socket.io");
-
+const cors = require('cors')
 const port = process.env.PORT || 8000
 // const index = require("./routes/index");
 
 const app = express();
+app.use(cors())
+
 // app.use(index);
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
@@ -18,9 +20,25 @@ app.use(express.static(__dirname + '/../build'))
 
 const server = http.createServer(app); //listen for socket connection
 
-const io = socketIo(server); // initialize a new instance by passing in the server object
+const io = socketIo(server,  {
+    handlePreflightRequest: (req, res) => {
+        const headers = {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization",
+            "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
+            "Access-Control-Allow-Credentials": true
+        };
+        res.writeHead(200, headers);
+        res.end();
+    }
+}); // initialize a new instance by passing in the server object
+// io.origins((origin, callback) => {
+//     if (origin !== 'https://realtime-socketio-calculator.herokuapp.com/') {
+//         return callback('origin not allowed', false);
+//     }
+//     callback(null, true);
+//   });
 
-app.use(express.static(__dirname + '/../../build'))
+app.use(express.static(__dirname + '/../build'))
 
 let historyData = []
 io.on('connection', function (socket) {
