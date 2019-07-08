@@ -6,7 +6,7 @@ import HistoryDisplay from './HistoryDisplay'
 export const CalculatorContext = React.createContext()
 
 const host = "http://127.0.0.1:8000"
-export const socket = socketIOClient('/') //process.env.PORT
+export const socket = socketIOClient(process.env.PORT) //process.env.PORT
 
 function Calculator () {
   const [result, setResult] = useState('') // this is the stored calculation result

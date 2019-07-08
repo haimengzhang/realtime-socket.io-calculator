@@ -14,11 +14,7 @@ const app = express();
 //     next();
 //   });
 
-  app.get('/', function (req, res) {
-    res.sendfile(__dirname + '/../build/index.html');
-  });
-
-// app.use(express.static(__dirname + '/../build'))
+app.use(express.static(__dirname + '/../build'))
 
 const server = http.createServer(app); //listen for socket connection
 
