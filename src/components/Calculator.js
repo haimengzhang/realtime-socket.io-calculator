@@ -5,17 +5,14 @@ import CurrentInputDisplay from './CurrentInputDisplay'
 import HistoryDisplay from './HistoryDisplay'
 export const CalculatorContext = React.createContext()
 
-const host = "http://localhost:8000"
-const endPoint = "https://realtime-socketio-calculator.herokuapp.com/"
-const port = process.env.PORT
 export const socket = socketIOClient('/')
 
 function Calculator () {
-  const [result, setResult] = useState('') // this is the stored calculation result
-  const [equation, setEquation] = useState('') // an array that displays current equation on the Display, only one at a time in a row
+  const [result, setResult] = useState('')
+  const [equation, setEquation] = useState('')
   const [history, setHistory] = useState([])
   const [executed, setExecuted] = useState(false)
-  // const [socket, setSocket] = useState()
+  let zeroFlag = false
 
   // for updating output
   useEffect(() => {
@@ -32,19 +29,19 @@ function Calculator () {
     }
   })
 
-
-
   // Handle new digit, change digits, update equation, equation is displayed on inputDisplay
   const handleOnDigitSetResult = num => {
     if (executed || !equation || equation === 'ERROR' || equation === '0') {
-      setEquation(num) // 9
-      // console.log('Equation after click a number is: ', equation)
-    } else {
-      setEquation(equation.concat(num))
-      // console.log('Equation after click a number is: ', equation)
+      setEquation(num)
     }
-    setExecuted(false);
-  }
+      if (equation.slice(-1) === '0' && ['+', '-', '*', '/'].includes(equation.charAt(equation.length - 2))) {
+        setEquation(equation.slice(0, equation.length - 1).concat(num))
+      }
+      else {
+        setEquation(equation.concat(num))
+      }
+      setExecuted(false)
+    }
 
   const handleOperatorButton = op => {
     var lastDigit = equation.slice(-1)
@@ -55,7 +52,7 @@ function Calculator () {
     }
     // if last digit is operator,
     else if (isOperator(equation.slice(-1))) {
-      // if operators are * or /, can directly concat to equation
+      // if operators are * or /, can directly concat '-' to equation
       if (['*', '/'].includes(lastDigit) && op === '-') {
         setEquation(equation.concat(op))
       } else {
@@ -75,7 +72,9 @@ function Calculator () {
   }
 
   const handleDeleteButton = () => {
-    if (equation) setEquation(equation.slice(0, -1))
+    if (equation) {
+      setEquation(equation.slice(0, -1))
+    }
   }
 
   const handleExecution = () => {
@@ -95,7 +94,7 @@ function Calculator () {
     }
   }
 
-  // helper
+  // helpers
   function isOperator (digit) {
     if (['+', '-', '*', '/'].includes(digit)) {
       return true
@@ -103,6 +102,9 @@ function Calculator () {
       return false
     }
   }
+
+
+
 
   return (
     <CalculatorContext.Provider

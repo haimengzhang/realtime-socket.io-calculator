@@ -33,7 +33,7 @@ const Key = props => {
       size='large'
       onClick={() => {
         switch (true) {
-          case /[0-9%]/.test(value):
+          case /[0-9]/.test(value):
             console.log('the clicked value is a number: ', value)
             return handleOnDigitSetResult(value)
           case ['+', '-', '*', '/'].includes(value):
