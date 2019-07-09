@@ -9,10 +9,9 @@ export const socket = socketIOClient('/')
 
 function Calculator () {
   const [result, setResult] = useState('')
-  const [equation, setEquation] = useState('')
+  const [equation, setEquation] = useState('') //equation is displayed on input screen
   const [history, setHistory] = useState([])
   const [executed, setExecuted] = useState(false)
-  let zeroFlag = false
 
   // for updating output
   useEffect(() => {
@@ -29,12 +28,12 @@ function Calculator () {
     }
   })
 
-  // Handle new digit, change digits, update equation, equation is displayed on inputDisplay
+  // Handle new digit, change digits, update equation
   const handleOnDigitSetResult = num => {
     if (executed || !equation || equation === 'ERROR' || equation === '0') {
       setEquation(num)
     }
-      if (equation.slice(-1) === '0' && ['+', '-', '*', '/'].includes(equation.charAt(equation.length - 2))) {
+      if (equation.slice(-1) === '0' && isOperator((equation.charAt(equation.length - 2)))) {
         setEquation(equation.slice(0, equation.length - 1).concat(num))
       }
       else {
@@ -102,9 +101,6 @@ function Calculator () {
       return false
     }
   }
-
-
-
 
   return (
     <CalculatorContext.Provider
