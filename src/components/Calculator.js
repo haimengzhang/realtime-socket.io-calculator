@@ -86,11 +86,12 @@ function Calculator () {
     if (result === 'ERROR') {
       setEquation('ERROR')
     }
-    // handle when equation has invalid format, e.g. '5+='
+    // Do not calculate when equation is invalid, e.g. '5+=', set result to error and return 
     if (/[\+\*\-\/]%+/.test(equation) || isOperator(equation.slice(-1))) {
       setResult('ERROR')
     } else {
-      var finalResult = eval(equation)
+      // use window.Function() constructor to calculate when valid
+      var finalResult = Function('"use strict";return (' + equation + ')')()
       setResult(finalResult.toString())
       setEquation(equation)
       console.log('result is calculated:  ', result)
