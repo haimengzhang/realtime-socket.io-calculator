@@ -5,7 +5,8 @@ import CurrentInputDisplay from './CurrentInputDisplay'
 import HistoryDisplay from './HistoryDisplay'
 export const CalculatorContext = React.createContext()
 
-export const socket = socketIOClient('/')
+const endURL = '/'
+export const socket = socketIOClient(endURL)
 
 function Calculator () {
   const [result, setResult] = useState('')
@@ -13,7 +14,7 @@ function Calculator () {
   const [history, setHistory] = useState([])
   const [executed, setExecuted] = useState(false)
 
-  // for updating output
+  // for updating output and emit side effects of execution 
   useEffect(() => {
     if (executed && equation !== result) {
       let temp = equation
@@ -33,13 +34,14 @@ function Calculator () {
     if (executed || !equation || ['ERROR', '0', "Infinity"].includes(equation)) {
       setEquation(num)
     }
+    // handle when the last two digit is +0. Replace '0' with new num
     else if (equation.slice(-1) === '0' && isOperator((equation.charAt(equation.length - 2)))) {
       setEquation(equation.slice(0, equation.length - 1).concat(num))
     }
     else {
       setEquation(equation.concat(num))
     }
-    setExecuted(false)
+    setExecuted(false) // to ensure new calculation starts
     }
 
   const handleOperatorButton = op => {
@@ -50,7 +52,7 @@ function Calculator () {
       }
     }
     // if last digit is operator,
-    else if (isOperator(equation.slice(-1))) {
+    else if (isOperator(lastDigit)) {
       // if operators are * or /, can directly concat '-' to equation
       if (['*', '/'].includes(lastDigit) && op === '-') {
         setEquation(equation.concat(op))
@@ -59,6 +61,7 @@ function Calculator () {
         let tempStr = equation.slice(0, equation.length - 1)
         setEquation(tempStr.concat(op))
       }
+    // if last digit is number
     } else if (/[0-9%]/.test(lastDigit)) {
       setEquation(equation.concat(op))
     }
@@ -83,6 +86,7 @@ function Calculator () {
     if (result === 'ERROR') {
       setEquation('ERROR')
     }
+    // handle when equation has invalid format, e.g. '5+='
     if (/[\+\*\-\/]%+/.test(equation) || isOperator(equation.slice(-1))) {
       setResult('ERROR')
     } else {

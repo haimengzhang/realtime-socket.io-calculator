@@ -9,15 +9,6 @@ import { socket } from './Calculator'
 import { CalculatorContext } from './Calculator'
 
 const useStyles = makeStyles(theme => ({
-  card: {
-    // #acacac, #202326, ccdee5, aaaaaa, d3d3d3
-  },
-  button: {
-    color: 'white',
-    fontSize: '10px',
-    fontWeight: '100',
-    font: 'Raleway'
-  },
   input: {
     height: 345,
     backgroundColor: '#FEFEFE',
@@ -30,21 +21,22 @@ const useStyles = makeStyles(theme => ({
 const HistoryDisplay = () => {
   const classes = useStyles()
   const { history, setHistory, socket } = useContext(CalculatorContext)
-  // let JustConnected = true
-  // socket.on('new-remote-cal', data => setHistory(data))
+
+  // This creates history display in rows
   const createHistoryRows = () => {
-    // if (JustConnected){
-    // socket.emit("fetch request")
-    // JustConnected = false
-    // }
+
+    // This socket lets user fetch history when first connected
     socket.on('history fetched', historyData => {
       setHistory(historyData)
       // console.log('Fetching history upon creating history rows: ', historyData)
     })
+    // A socket to listen for real-time updates from server
     socket.on('new-remote-calculation', data => {
       setHistory(data)
       // console.log('Client received server data: ', history)
     })
+
+    // populate history display
     let rows = []
     for (let i = history.length - 1; i >= 0; i--) {
       rows.push(
@@ -55,6 +47,7 @@ const HistoryDisplay = () => {
     }
     return rows
   }
+
   return (
     <Grid container justify='center'>
       <Typography variant='body1' color='textSecondary' component='p'>
