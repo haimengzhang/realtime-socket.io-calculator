@@ -36,7 +36,8 @@ const io = socketIo(server,  {
 let historyData = []
 io.on('connection', function (socket) {
     console.log('a user just connected')
-    socket.on('fetch request', ()=>{io.emit('history fetched', historyData)})
+    // socket.on('fetch request', ()=>{io.emit('history fetched', historyData)})
+    io.emit('history fetched', historyData)
     socket.on('new-calculation', (data) => {
         console.log('Sever received one calculation: ', data)
         if (historyData.length == 10) {

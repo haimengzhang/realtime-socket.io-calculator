@@ -8,7 +8,7 @@ export const CalculatorContext = React.createContext()
 const host = "http://localhost:8000"
 const endPoint = "https://realtime-socketio-calculator.herokuapp.com/"
 const port = process.env.PORT
-export const socket = socketIOClient('/')
+export const socket = socketIOClient(host)
 
 function Calculator () {
   const [result, setResult] = useState('') // this is the stored calculation result
@@ -25,13 +25,14 @@ function Calculator () {
       let dataToSend = temp.concat(' = ').concat(result)
       socket.emit('new-calculation', dataToSend)
       // console.log('Data to send is: ', dataToSend)
+      socket.on('new-remote-calculation', data => {
+        setHistory(data)
+        console.log('Client received server data: ', history)
+      })
     }
   })
 
-  socket.on('new-remote-calculation', data => {
-    setHistory(data)
-    console.log('Client received server data: ', history)
-  })
+
 
   // Handle new digit, change digits, update equation, equation is displayed on inputDisplay
   const handleOnDigitSetResult = num => {

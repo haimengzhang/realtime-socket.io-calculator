@@ -16,11 +16,11 @@ function KeyPad () {
         bgcolor='#acacac'
         m={1}
         p={1}
-        style={{ width: '379px', height: '339px' }}
+        style={{ width: '379px', height: '409px' }}
       >
         <Typography variant='body1' color='textSecondary' component='p'>
           <Grid container justify='center'>
-            <Grid justify='center' item xs={9}>
+            <Grid justify='center' item xs={10}>
               <Grid container justify='center' spacing={1}>
                 {keys.map(item =>
                   item === 'DEL' ? (
