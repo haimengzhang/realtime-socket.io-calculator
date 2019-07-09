@@ -4,7 +4,7 @@ const app = express();
 const http = require("http");
 const server = http.Server(app)
 const socketIo = require("socket.io");
-const cors = require('cors')
+
 const port = process.env.PORT || 8000
 // app.use(index);
 // app.use(function(req, res, next) {
@@ -36,7 +36,7 @@ const io = socketIo(server,  {
 let historyData = []
 io.on('connection', function (socket) {
     console.log('a user just connected')
-    io.emit('history fetched', historyData)
+    socket.on('fetch request', ()=>{io.emit('history fetched', historyData)})
     socket.on('new-calculation', (data) => {
         console.log('Sever received one calculation: ', data)
         if (historyData.length == 10) {

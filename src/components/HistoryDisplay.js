@@ -29,11 +29,22 @@ const useStyles = makeStyles(theme => ({
 
 const HistoryDisplay = () => {
   const classes = useStyles()
-  const { history, setHistory } = useContext(CalculatorContext)
+  const { history, setHistory, socket } = useContext(CalculatorContext)
+  let JustConnected = true
   // socket.on('new-remote-cal', data => setHistory(data))
   const createHistoryRows = () => {
-    // socket.emit('fetch history')
-    socket.on('history fetched', historyData => setHistory(historyData))
+    if (JustConnected){
+    socket.emit("fetch request")
+    JustConnected = false
+    }
+    socket.on('history fetched', historyData => {
+      setHistory(historyData)
+      // console.log('Fetching history upon creating history rows: ', historyData)
+    })
+    // socket.on('new-remote-calculation', data => {
+    //   setHistory(data)
+    //   // console.log('Client received server data: ', history)
+    // })
     let rows = []
     for (let i = history.length - 1; i >= 0; i--) {
       rows.push(

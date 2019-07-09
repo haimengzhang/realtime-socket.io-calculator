@@ -5,16 +5,17 @@ import CurrentInputDisplay from './CurrentInputDisplay'
 import HistoryDisplay from './HistoryDisplay'
 export const CalculatorContext = React.createContext()
 
-const host = "http://localhost:4001"
+const host = "http://localhost:8000"
 const endPoint = "https://realtime-socketio-calculator.herokuapp.com/"
 const port = process.env.PORT
-export const socket = socketIOClient('/') //process.env.PORT
+export const socket = socketIOClient('/')
 
 function Calculator () {
   const [result, setResult] = useState('') // this is the stored calculation result
   const [equation, setEquation] = useState('') // an array that displays current equation on the Display, only one at a time in a row
   const [history, setHistory] = useState([])
   const [executed, setExecuted] = useState(false)
+  // const [socket, setSocket] = useState()
 
   // for updating output
   useEffect(() => {
@@ -23,9 +24,12 @@ function Calculator () {
       setEquation(result)
       let dataToSend = temp.concat(' = ').concat(result)
       socket.emit('new-calculation', dataToSend)
-      console.log('Data to send is: ', dataToSend)
+      // console.log('Data to send is: ', dataToSend)
     }
-    socket.on('new-remote-calculation', data => setHistory(data))
+  })
+
+  socket.on('new-remote-calculation', data => {
+    setHistory(data)
     console.log('Client received server data: ', history)
   })
 
@@ -33,10 +37,10 @@ function Calculator () {
   const handleOnDigitSetResult = num => {
     if (executed || !equation || equation === 'ERROR' || equation === '0') {
       setEquation(num) // 9
-      console.log('Equation after click a number is: ', equation)
+      // console.log('Equation after click a number is: ', equation)
     } else {
       setEquation(equation.concat(num))
-      console.log('Equation after click a number is: ', equation)
+      // console.log('Equation after click a number is: ', equation)
     }
     setExecuted(false);
   }
@@ -112,7 +116,8 @@ function Calculator () {
         history,
         setHistory,
         result,
-        equation
+        equation,
+        socket
       }}
     >
       <CurrentInputDisplay equation={equation} /> <KeyPad />
