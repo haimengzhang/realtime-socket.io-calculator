@@ -19,8 +19,6 @@ const Key = props => {
   const {
     handleOnDigitSetResult,
     handleOperatorButton,
-    handleToggleNegative,
-    handleDotButton,
     handleClearButton,
     handleDeleteButton,
     handleExecution,
@@ -34,7 +32,7 @@ const Key = props => {
       size='large'
       onClick={() => {
         const valid = ()=>{
-          if (equation.length < 23) 
+          if (equation.length < 18) 
            return true
           else {
             return false
