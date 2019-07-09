@@ -8,7 +8,7 @@ export const CalculatorContext = React.createContext()
 const host = "http://localhost:8000"
 const endPoint = "https://realtime-socketio-calculator.herokuapp.com/"
 const port = process.env.PORT
-export const socket = socketIOClient(host)
+export const socket = socketIOClient('/')
 
 function Calculator () {
   const [result, setResult] = useState('') // this is the stored calculation result
