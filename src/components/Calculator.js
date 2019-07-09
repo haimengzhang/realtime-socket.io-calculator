@@ -30,16 +30,16 @@ function Calculator () {
 
   // Handle new digit, change digits, update equation
   const handleOnDigitSetResult = num => {
-    if (executed || !equation || equation === 'ERROR' || equation === '0') {
+    if (executed || !equation || ['ERROR', '0', "Infinity"].includes(equation)) {
       setEquation(num)
     }
-      if (equation.slice(-1) === '0' && isOperator((equation.charAt(equation.length - 2)))) {
-        setEquation(equation.slice(0, equation.length - 1).concat(num))
-      }
-      else {
-        setEquation(equation.concat(num))
-      }
-      setExecuted(false)
+    else if (equation.slice(-1) === '0' && isOperator((equation.charAt(equation.length - 2)))) {
+      setEquation(equation.slice(0, equation.length - 1).concat(num))
+    }
+    else {
+      setEquation(equation.concat(num))
+    }
+    setExecuted(false)
     }
 
   const handleOperatorButton = op => {

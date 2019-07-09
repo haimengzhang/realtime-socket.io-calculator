@@ -23,7 +23,8 @@ const Key = props => {
     handleDotButton,
     handleClearButton,
     handleDeleteButton,
-    handleExecution
+    handleExecution,
+    equation
   } = useContext(CalculatorContext)
 
   return (
@@ -32,28 +33,31 @@ const Key = props => {
       className={classes.button}
       size='large'
       onClick={() => {
-        switch (true) {
-          case /[0-9]/.test(value):
-            console.log('the clicked value is a number: ', value)
-            return handleOnDigitSetResult(value)
-          case ['+', '-', '*', '/'].includes(value):
-            console.log('the clicked value is an operator: ', value)
-            return handleOperatorButton(value)
-          case value === '.':
-            console.log('the clicked value is an operator: ', value)
-            return handleDotButton()
-          case value === '+/-':
-            return handleToggleNegative()
-          case value === '=':
-            console.log('the clicked value is an operator: ', value)
-            return handleExecution()
-          case value === 'C':
-            return handleClearButton()
-          case value === 'DEL':
-            return handleDeleteButton()
-          default:
-            return value
+        const valid = ()=>{
+          if (equation.length < 23) 
+           return true
+          else {
+            return false
+          }
         }
+          switch (true) {
+            case /[0-9]/.test(value) && valid():
+              console.log('the clicked value is a number: ', value)
+              return handleOnDigitSetResult(value)
+            case ['+', '-', '*', '/'].includes(value) && valid():
+              console.log('the clicked value is an operator: ', value)
+              return handleOperatorButton(value)
+            case value === '=':
+              console.log('the clicked value is an operator: ', value)
+              return handleExecution()
+            case value === 'C':
+              return handleClearButton()
+            case value === 'DEL':
+              return handleDeleteButton()
+            default:
+              return value
+          }
+
       }}
     >
       {value}

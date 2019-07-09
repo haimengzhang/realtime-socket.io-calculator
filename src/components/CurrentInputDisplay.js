@@ -45,7 +45,7 @@ export default function CurrentInputDisplay () {
             alignItems='flex-end'
           >
             <Box>
-              <Grid item>{equation}</Grid>
+              <Grid item>{equation} </Grid>
             </Box>
           </Grid>
         </Box>
